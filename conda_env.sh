@@ -35,7 +35,7 @@ conda install -c conda-forge conda-build -y
 
 conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 
-pip install tqdm==4.67.3 wandb natsort==8.4.0 tabulate==0.9.0 "numpy<2" pytest psutil==7.2.2 addict==2.4.0 matplotlib==3.10.8
+pip install tqdm==4.67.3 wandb natsort==8.4.0 tabulate==0.9.0 "numpy<2" pytest psutil==7.2.2 addict==2.4.0 matplotlib==3.10.1
 
 # Add the current TCE repo to python path
 conda develop .

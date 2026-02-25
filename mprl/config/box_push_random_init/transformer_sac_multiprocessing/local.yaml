@@ -13,14 +13,13 @@ num_checkpoints: 1
 params:
   agent:
     args:
-      policy_warmup_step: 5000
-      evaluation_interval: 3
+      evaluation_interval: 100
   sampler:
     args:
       num_env_train: 4
       num_env_test: 4
       episodes_per_train_env: 1
-      episodes_per_test_env: 5
+      episodes_per_test_env: 38
   projection:
     args:
       total_train_steps: *iterations

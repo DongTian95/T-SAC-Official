@@ -1,7 +1,7 @@
 # Global config
 exp_name: &exp_name "box_random_tsac_entire"
 exp_path: &exp_path "../mprl_exp_result"
-sub_exp_name: &sub_exp_name "[verify the correctness of the reset]"
+sub_exp_name: &sub_exp_name "[Rebuttal: Official Ablation] hard copy, soft copy, step_length=1"
 act_func_hidden: &act_func_hidden relu
 act_func_last: &act_func_last null
 dtype: &dtype "float32"
@@ -26,7 +26,7 @@ wandb:
 # experiment parameters
 params:
   agent:
-    type: TransformerSACMultiProcessing
+    type: RLACMultiProcessing
     args:
       lr_policy: 2.5e-4
       lr_critic: 3.0e-5
@@ -53,7 +53,7 @@ params:
       random_critic_index_number: default
       random_policy_index_number: 0.2 # number means how many policies will be updated, list means upper and lower bound of interval
       random_target: true
-      use_done_for_target: true
+      use_done_for_target: &use_done_for_target true
       critic_train_in_order: false  # option: segment, segment_uniform, true, false, top_erl_segment(not ready)
       punish_deviation: # by default leave it empty, if not empty, it should be a non-negative number
       reset_critic_network:    # should be a list or blank
@@ -67,7 +67,7 @@ params:
       device: *device
 
   policy:
-    type: TransformerSACPolicy
+    type: RLACPolicy
     args:
       mean_net_args:
         layer_norm: false
@@ -81,6 +81,7 @@ params:
         avg_neuron: 256
         num_hidden: 2
         shape: 0.0
+      policy_step_length: 1
       init_method: fan_in
       out_layer_gain: 0.01
       min_std: 1e-5
@@ -126,7 +127,7 @@ params:
       device: *device
 
   sampler:
-    type: TransformerSACSampler
+    type: RLACSampler
     args:
       env_id: "fancy/BoxPushingRandomInitDense-v0"
       episodes_per_train_env: 1
@@ -137,6 +138,8 @@ params:
       step_length: 16 # should be positive
       action_range: 1.0
       padding_on: false
+      reset_at_beginning: true
+      use_done_for_target: *use_done_for_target
       add_timestamp: *add_timestamp
       dtype: *dtype
       device: *device

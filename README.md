@@ -1,6 +1,3 @@
-📝 Note on Performance: > The current codebase fully reproduces the results reported in our paper. However, due to compute constraints during development, we were unable to perform extensive rerolling or hyperparameter tuning. We believe this architecture has even higher potential, and our team plans to train and publish a newer, optimized version once additional compute resources become available.
-
-````markdown
 # T-SAC — Chunking the Critic (ICLR 2026)
 
 Official code release for the ICLR 2026 paper:
@@ -42,46 +39,11 @@ T-SAC strengthens SAC by “chunking” **inside the critic**:
 - Scripts for launching multi-seed runs (local / Slurm)
 - Plotting / aggregation utilities (IQM + bootstrap CIs, etc.)
 
-> If you are packaging this as a library, consider adding a minimal API example in `examples/`.
-
 ---
 
 ## Installation
 
-### 1) Create a Python environment
-
-```bash
-conda create -n tsac python=3.10 -y
-conda activate tsac
-````
-
-### 2) Install dependencies
-
-Choose **one**:
-
-**Option A (recommended, editable install):**
-
-```bash
-pip install -U pip
-pip install -e .
-```
-
-**Option B (requirements file):**
-
-```bash
-pip install -U pip
-pip install -r requirements.txt
-```
-
-### 3) Install benchmark environments (as needed)
-
-Depending on what you want to run:
-
-* **Gymnasium MuJoCo (v4):** `gymnasium[mujoco]` (+ MuJoCo runtime)
-* **Meta-World (ML1):** `metaworld`
-* **FANCYGYM Box-Pushing:** `fancy_gym`
-
-> Tip: keep benchmark dependencies optional (extras) to make install lighter.
+We provide 
 
 ---
 

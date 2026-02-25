@@ -1,16 +1,16 @@
 ---
 name: "SLURM"
-partition: "accelerated"
+partition: "normal"
 job-name: "box_random_tsac_entire"
 num_parallel_jobs: 120
 ntasks: 1
 cpus-per-task: 152
-time: 199
+time: 999
 gpus_per_rep: 1
 scheduler: horeka
 sbatch_args:
-  gres: "gpu:4"
-  account: "hk-project-p0022232"
+  gres: "gpu:full:4"
+#  account: "hk-project-p0022232"
 
 experiment_copy_src:
   - "../" # RL Code base
@@ -47,7 +47,7 @@ params:
 #      min_length: [1]
 #      step_length: [64]
 
-#grid:
+grid:
 #  agent:
 #    args:
 #      random_critic_index_number: [0.2, 0.4, 0.6, 0.8]
@@ -60,11 +60,11 @@ params:
 #      entropy_penalty_coef: [0.0, 0.02, 0.002, 0.2]
 #      discount_factor: [1.0, 0.98]
 #      random_policy_index_number: [10, 20, 30, 40])
-#  sampler:
-#    args:
+  sampler:
+    args:
 #      num_env_train: [4, 5, 6, 7, 8, 9, 10, 11, 12]
 #      min_length: [1, 4]
-#      step_length: [4, 8, 16, 32]
+      step_length: [1]
 #  replay_buffer:
 #    args:
 #      buffer_size: [1000, 2000, 3000, 4000, 5000, 10000, 15000, 20000]
@@ -77,9 +77,9 @@ params:
 #      variance_net_args:
 #        layer_norm: [false, true]
 #        avg_neuron: [64, 128, 256, 512]
-#  critic:
-#    args:
-#      update_rate: [5.0e-3, 5.0e-2]
+  critic:
+    args:
+      update_rate: [5.0e-3, 1.0]
 #      net_args:
 #        n_embd: [128, 256]
 #        n_layer: [1, 2, 3, 4]

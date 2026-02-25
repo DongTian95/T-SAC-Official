@@ -222,12 +222,13 @@ When opening an issue, please include:
 If you use this code, please cite:
 
 ```bibtex
-@inproceedings{tian2026chunking,
-  title     = {Chunking the Critic: A Transformer-Based Soft Actor-Critic with N-Step Returns},
-  author    = {Tian, Dong and Celik, Onur and Neumann, Gerhard},
-  booktitle = {International Conference on Learning Representations (ICLR)},
-  year      = {2026},
-  note      = {Code: https://github.com/DongTian95/T-SAC-Official}
+@inproceedings{
+tian2026chunking,
+title={Chunking the Critic: A Transformer-based Soft Actor-Critic with N-Step Returns},
+author={Dong Tian and Onur Celik and Gerhard Neumann},
+booktitle={The Fourteenth International Conference on Learning Representations},
+year={2026},
+url={https://openreview.net/forum?id=rb5eTktqbc}
 }
 ```
 

@@ -37,19 +37,108 @@ T-SAC strengthens SAC by “chunking” **inside the critic**:
 - Training + evaluation scripts
 - Configs for the paper benchmarks
 - Scripts for launching multi-seed runs (local / Slurm)
-- Plotting / aggregation utilities (IQM + bootstrap CIs, etc.)
 
 ---
 
 ## Installation
 
-We provide 
+### Hardware Requirements & CPU-Only Alternative
+
+Linux OS is required. We recommend to use Linux 12.4 here.
+
+Running this program requires both a CPU and GPU because **multiprocessing** module is used to distribute the workload: the sampling procedure runs on the CPU, while model training occurs on the GPU.
+
+If a GPU setup is not available, you can run a CPU-only version by doing the following:
+
+1. Execute mp_exp.py instead of mp_exp_multiprocessing.py.
+
+2. In the configuration file located at mprl/config/xxx/transformer_sac_multiprocessing/shared.yaml, change the device setting from "cuda" to "cpu".
+
+⚠️ Reproducibility Warning: All test results reported in our paper were generated using the CPU+GPU setup. Therefore, we cannot guarantee exact reproducibility if you run the experiments using the CPU-only configuration.
+
+### 
+
+---
+
+## Environment setup (Conda required)
+
+### 1) Install Miniconda (recommended)
+
+Download Miniconda for your OS from the official page and install it:
+
+* Miniconda:
+
+      https://www.anaconda.com/docs/getting-started/miniconda/install#macos-linux-installation
+
+* After installation, **close and reopen your terminal** (or start a new shell) so that `conda` is available.
+
+Quick check:
+
+```
+conda --version
+```
+
+> If `conda` is not found, ensure Miniconda’s install path is on your `PATH`, or run the Miniconda installer again and enable shell initialization.
+
+---
+
+### 2) Switch back to the `base` environment
+
+Before creating the project environment, always return to `base`:
+
+```
+conda deactivate 2>/dev/null || true
+conda activate base
+```
+
+Confirm:
+
+```
+echo $CONDA_DEFAULT_ENV
+# should print: base
+```
+
+---
+
+### 3) Create the project environment using the provided script
+
+From the directory that contains `T-SAC-Official`, run:
+
+```
+cd ./T-SAC-Official
+bash conda_env.sh
+```
+
+> This script creates and configures the environment for the project.
+
+---
+
+### 4) Activate the environment
+
+```
+conda activate tsac_official_env
+```
+
+Confirm:
+
+```
+python --version
+echo $CONDA_DEFAULT_ENV
+# expected: tsac_official_env
+```
+
+---
+
+## Notes
+
+* If you clone dependencies via `git@github.com:...`, you need GitHub SSH keys configured; otherwise use HTTPS clones.
 
 ---
 
 ## Quickstart
 
-> Replace the commands below with your actual entrypoints (e.g., `python train.py ...`, `python -m tsac.train ...`, Hydra, etc.).
+> Replace the commands below with your actual entrypoints (e.g., `python mp_exp_multiprocessing.py .../local.yaml -o --nocodecopy`, 
+> `python mp_exp_multiprocessing.py .../horeka.yaml -o -s`).
 
 ### Train (example)
 
@@ -61,13 +150,6 @@ python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 steps=5_000_000
 
 ```bash
 python eval.py suite=gymnasium env=Walker2d-v4 ckpt=path/to/checkpoint episodes=20
-```
-
-### Log to Weights & Biases (example)
-
-```bash
-wandb login
-python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 logger=wandb project="T-SAC"
 ```
 
 ---
@@ -106,55 +188,6 @@ python train.py suite=fancygym task=box_pushing_sparse algo=tsac seed=0 steps=20
 ```bash
 python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 steps=5_000_000
 ```
-
----
-
-## Key hyperparameters (paper defaults)
-
-These are the main knobs to check first if results differ:
-
-### N-step / windowing
-
-* `min_len = 1`
-* `max_len = 16` (standard setting)
-* sample horizon `n ~ Uniform{min_len, ..., max_len}`
-* (optional) collect multiple windows per environment rollout (paper commonly uses 4)
-
-### Transformer critic (lightweight)
-
-* causal self-attention (no future leakage)
-* typically **2 attention layers**
-* hidden size **128–256** (task-dependent)
-* no dropout (recommended)
-
-### Update-to-data ratio (UTD)
-
-* **UTD ≤ 1** (paper uses a maximum UTD of 1)
-
-### Target-network mode vs target-free mode
-
-* **Default:** Polyak target updates (SAC-style)
-* **Target-free option:** hard-copy snapshot + cached targets for `K` critic updates
-
-  * MuJoCo setting: `K = 20` is a good default starting point
-
----
-
-## Repository structure (recommended)
-
-(Adjust names to match your project.)
-
-```text
-.
-├── tsac/                 # core algorithm (models, losses, replay, utils)
-├── configs/              # experiment configs (Hydra/YAML/etc.)
-├── scripts/              # launchers (local/Slurm), sweeps, plotting
-├── train.py              # training entrypoint
-├── eval.py               # evaluation entrypoint
-├── README.md
-└── LICENSE
-```
-
 ---
 
 ## Troubleshooting

@@ -1,0 +1,71 @@
+---
+name: "SLURM"
+partition: "advanced"
+job-name: "box_random_tsac_sparse_final_test"
+num_parallel_jobs: 120
+ntasks: 1
+cpus-per-task: 152
+time: 1099
+gpus_per_rep: 1
+scheduler: horeka
+sbatch_args:
+  gres: "gpu:4"
+#  account: "hk-project-p0022253"
+
+experiment_copy_src:
+  - "../" # RL Code base
+#  - "../../fancy_gymnasium/" # fancy_gym
+experiment_copy_auto_dst: "../../CODE_COPY/"
+---
+name: box_random_tsac_sparse_final_test
+import_path: "./shared.yaml"
+import_exp: "box_random_tsac_sparse_final_test"
+
+# cw2 config
+repetitions: 8      # Number of repetitions, each with different random seed, 4 for test, 20 for paper
+reps_per_job: 4
+reps_in_parallel: 4
+iterations: &iterations 50000
+num_checkpoints: 1
+
+# Hardware specific parameters
+params:
+  sampler:
+    args:
+      num_env_train: 4
+      num_env_test: 38
+      episodes_per_train_env: 1
+      episodes_per_test_env: 4
+  projection:
+    args:
+      total_train_steps: *iterations
+
+#grid:
+#  agent:
+#    args:
+#      lr_policy: [1e-4, 2e-4, 3e-4, 4e-4, 5e-4, 6e-4, 7e-4, 8e-4]
+#      discount_factor: [1.0]
+#      training_times_critic: [1, 2, 3, 4]
+#      entropy_penalty_coef: [0.0, 0.000002, 0.00002, 0.0002]
+#      batch_size: [128, 256, 512, 1024]
+#      policy_warmup_step: [5000, 10000, 15000, 20000]
+#  sampler:
+#    args:
+#      step_length: [1, 4, 8, 16]
+#  replay_buffer:
+#    args:
+#      buffer_size: [5000, 10000, 15000, 20000]
+#      prb_reward_scaling: [0.0, 0.01, 1.0]
+#  policy:
+#    args:
+#      mean_net_args:
+#      variance_net_args:
+#        avg_neuron: [256, 512, 1024]
+#        num_hidden: [1, 2]
+#  critic:
+#    args:
+#      update_rate: [5.0e-3, 5.0e-2, 0.2]
+#      net_args:
+#        n_embd: [512, 1024, 2048, 4096]
+#        n_layer: [1, 2]
+#        n_head: [1, 2, 4, 8]

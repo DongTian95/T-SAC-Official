@@ -1,0 +1,157 @@
+# Global config
+exp_name: &exp_name "box_random_tsac_sparse_final_test"
+exp_path: &exp_path "../mprl_exp_result"
+sub_exp_name: &sub_exp_name "[Rebuttal: ICLR final test]"
+act_func_hidden: &act_func_hidden leaky_relu
+act_func_last: &act_func_last null
+dtype: &dtype "float32"
+device: &device "cuda"
+seed: 3
+add_timestamp: &add_timestamp true   # option: only_action, true, false
+
+# cw2 config
+name: *exp_name
+path: *exp_path
+
+# wandb
+wandb:
+  project: *exp_name
+  group: *sub_exp_name
+  entity: dt_team
+  log_interval: &log_interval 100
+  log_model: true
+  model_name: model
+  comment: development on going (maybe)
+
+# experiment parameters
+params:
+  agent:
+    type: RLACMultiProcessing
+    args:
+      lr_policy: 2.5e-4
+      lr_critic: 3.0e-4
+      wd_policy: 1e-5
+      wd_critic: 1e-5
+      betas: (0.9, 0.999)
+      policy_betas: (0.9, 0.999)
+      critic_betas: (0.9, 0.999)
+      total_iterations: 50000   # this is to control schedule_lr
+      schedule_lr_policy: true
+      schedule_lr_critic: true
+      clip_critic: 0.0
+      clip_grad_norm: 1.0
+      separate_policy_entropy_training: false  # should be true when first after entropy_penalty_coef is not 0
+      use_automatic_entropy_tuning: false
+      entropy_penalty_coef: 0   # when use_automatic_entropy_tuning is true, this means the initial value
+      target_entropy: default   # suggest to use default
+      discount_factor: &discount_factor 1.0
+      batch_size: &batch_size 256
+      critic_warmup_step: 0
+      policy_warmup_step: 3000
+      update_way: mp  # option: original_sac, mp
+      training_times: 1  # 3 seems better
+      segments_num: 1
+      policy_delay: 0
+      random_critic_index_number: 100
+      random_policy_index_number: 20 # number means how many policies will be updated, list means upper and lower bound of interval
+      random_target: false
+      use_done_for_target: true
+      critic_train_in_order: false  # option: segment, segment_uniform, true, false, top_erl_segment(not ready)
+      punish_deviation: # by default leave it empty, if not empty, it should be a non-negative number
+      reset_critic_network:    # should be a list or blank
+      reset_policy_network:   # should be a list or blank
+      continue_policy_training:   # should have a number if reset_critic_network is not empty
+      target_update_interval: 0
+      huber_beta:
+      add_timestamp: *add_timestamp
+      balance_check: *log_interval
+      evaluation_interval: *log_interval
+      dtype: *dtype
+      device: *device
+
+  policy:
+    type: RLACPolicy
+    args:
+      mean_net_args:
+        avg_neuron: 256
+        layer_norm: true
+        num_hidden: 2
+        shape: 0.0
+      variance_net_args:
+        layer_norm: true
+        std_only: true
+        contextual: true
+        avg_neuron: 256
+        num_hidden: 2
+        shape: 0.0
+      init_method: fan_in
+      out_layer_gain: 0.01
+      min_std: 1e-5
+      log_min_std: -20
+      feed_mean_to_variance: false
+      act_func_hidden: *act_func_hidden
+      act_func_last: *act_func_last
+      dtype: *dtype
+      device: *device
+
+  critic:
+    type: TransformerSACCritic
+    args:
+      net_args:
+        block_size: 1024
+        n_layer: 2
+        n_head: 4
+        n_embd: 256
+        dropout: 0.0
+        bias: false
+        use_layer_norm: true
+      update_rate: 1.0   # used for polyak averaging
+      out_layer_gain: 1
+      act_func_last: *act_func_last
+      dtype: *dtype
+      device: *device
+
+  projection:
+    type: KLProjectionLayer
+    args:
+      proj_type: kl
+      mean_bound: 0.005
+      cov_bound: 0.005
+      trust_region_coeff: 0.25
+      scale_prec: true
+      entropy_schedule: false  # Desired value is linear or exp or null
+      target_entropy: -1 # target entropy per action dim
+      temperature: 0.7
+      entropy_eq: false # If the entropy should follow an equality constraint
+      entropy_first: false # If the entropy should be the first constraint
+      do_regression: false
+      dtype: *dtype
+      device: *device
+
+  sampler:
+    type: RLACSampler
+    args:
+      env_id: "fancy/BoxPushingRandomInitTemporalSparse-v0"
+      episodes_per_train_env: 1
+      episodes_per_test_env: 1
+      norm_step_obs: false
+      reward_scaling: 1.0
+      min_length: 1
+      step_length: 16
+      action_range: 1.0
+      padding_on: false
+      add_timestamp: *add_timestamp
+      dtype: *dtype
+      device: *device
+      seed: auto
+      task_specified_metrics: [ "is_success", "box_goal_pos_dist",
+                                "box_goal_rot_dist", "episode_energy" ]
+
+  replay_buffer: # Only for off-policy
+    type: TransformerSACReplayBuffer
+    args:
+      buffer_size: 20000  # Each sample is quite large, so we can't afford a big buffer
+      prb_reward_scaling: 0.0
+      batch_size: *batch_size
+      device: *device
+      dtype: *dtype

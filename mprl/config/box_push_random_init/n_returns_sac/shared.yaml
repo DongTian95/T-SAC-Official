@@ -1,0 +1,131 @@
+# Global config
+exp_name: &exp_name "box_pushing_nrsac_entire"
+exp_path: &exp_path "../mprl_exp_result"
+sub_exp_name: &sub_exp_name "compare to tsac, separate policy entropy training"
+act_func_hidden: &act_func_hidden tanh
+act_func_last: &act_func_last null
+dtype: &dtype "float32"
+device: &device "cpu"
+seed: auto
+add_timestamp: &add_timestamp false  # option: only_action, true, false
+cpus_per_rep: 38
+
+# cw2 config
+name: *exp_name
+path: *exp_path
+
+# wandb
+wandb:
+    project: *exp_name
+    group: *sub_exp_name
+    entity: dt_team
+    log_interval: &log_interval 100
+    log_model: true
+    model_name: model
+    comment: development on going (I personally hope so)
+
+# experiment parameters
+params:
+  agent:
+    type: NReturnSAC
+    args:
+      lr_policy: 3e-4
+      lr_critic: 3e-4
+      wd_policy: 1e-5
+      wd_critic: 1e-5
+      betas: (0.9, 0.999)
+      total_iterations: 100000   # this is to control schedule_lr
+      schedule_lr_policy: true
+      schedule_lr_critic: true
+      clip_critic: 0.0
+      clip_grad_norm: 0.0
+      separate_policy_entropy_training: true
+      use_automatic_entropy_tuning: true
+      entropy_penalty_coef: -10   # when use_automatic_entropy_tuning is true, this means the initial value
+      target_entropy: default   # suggest to use default
+      discount_factor: &discount_factor 0.99
+      batch_size: &batch_size 512
+      critic_warmup_step: 0
+      policy_warmup_step: 100000
+      training_times: 5  # 3 seems better
+      random_critic_index_number: 20
+      random_policy_index_number: 5  # number means how many policies will be updated, list means upper and lower bound of interval
+      random_target: true
+      use_done_for_target: false
+      critic_train_in_order: segment  # option: segment, segment_uniform, true, false, top_erl_segment(not ready)
+      punish_deviation: # by default leave it empty, if not empty, it should be a non-negative number
+      reset_critic_network: # should be a list or blank
+        -
+      reset_policy_network: # should be a list or blank
+        -
+      continue_policy_training: # should have a number if reset_critic_network is not empty
+        -
+#      target_update_interval: 50
+      add_timestamp: *add_timestamp
+      balance_check: *log_interval
+      evaluation_interval: *log_interval
+      dtype: *dtype
+      device: *device
+
+  policy:
+    type: NReturnSACPolicy
+    args:
+      mean_net_args:
+        avg_neuron: 256
+        num_hidden: 2
+        shape: 0.0
+      variance_net_args:
+        std_only: true
+        contextual: true
+        avg_neuron: 256
+        num_hidden: 2
+        shape: 0.0
+      init_method: orthogonal
+      out_layer_gain: 0.01
+      min_std: 1e-5
+      log_min_std: -20
+      act_func_hidden: *act_func_hidden
+      act_func_last: *act_func_last
+      dtype: *dtype
+      device: *device
+
+  critic:
+    type: NReturnSACCritic
+    args:
+      hidden:
+        avg_neuron: 256
+        num_hidden: 2
+        shape: 0.0
+      update_rate: 5.0e-3   # used for polyak averaging
+      init_method: orthogonal
+      out_layer_gain: 1
+      act_func_hidden: *act_func_hidden
+      act_func_last: *act_func_last
+      dtype: *dtype
+      device: *device
+
+  sampler:
+    type: NReturnSACSampler
+    args:
+      env_id: "fancy/BoxPushingRandomInitDense-v0"
+      episodes_per_train_env: 1
+      episodes_per_test_env: 1
+      norm_step_obs: false
+      reward_scaling: 1.0
+      step_length: 8
+      padding_on: false
+      add_timestamp: *add_timestamp
+      dtype: *dtype
+      device: *device
+      seed: auto
+      task_specified_metrics: [ "is_success", "box_goal_pos_dist",
+                                "box_goal_rot_dist", "episode_energy" ]
+
+  replay_buffer:  # Only for off-policy
+    type: NReturnSACReplayBuffer
+    args:
+      buffer_size: 5000  # Each sample is quite large, so we can't afford a big buffer
+#      prb_reward_scaling: 0.0  # reward scaling for soft max sampling
+      batch_size: *batch_size
+      device: *device
+      dtype: *dtype

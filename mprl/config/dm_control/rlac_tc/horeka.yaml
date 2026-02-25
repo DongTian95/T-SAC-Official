@@ -1,0 +1,129 @@
+---
+name: "SLURM"
+partition: "accelerated"
+job-name: "dm_control_tsac"
+num_parallel_jobs: 120
+ntasks: 1
+cpus-per-task: 152
+time: 999
+gpus_per_rep: 1
+scheduler: horeka
+sbatch_args:
+  gres: "gpu:4"
+  account: "hk-project-p0022232"
+  exclude: "hkn0632,hkn0627,hkn0425"
+  
+experiment_copy_src:
+  - "../" # RL Code base
+#  - "../../fancy_gymnasium/" # fancy_gym
+experiment_copy_auto_dst: "../../CODE_COPY/"
+---
+name: another try
+import_path: "./shared.yaml"
+import_exp: "dm_control_tsac"
+
+# cw2 config
+repetitions: 8      # Number of repetitions, each with different random seed, 4 for test, 20 for paper
+reps_per_job: 4
+reps_in_parallel: 4
+iterations: &iterations 62500
+num_checkpoints: 1
+
+# Hardware specific parameters
+params:
+  sampler:
+    args:
+      num_env_train: 4
+      num_env_test: 38
+      episodes_per_train_env: 1
+      episodes_per_test_env: 4
+  projection:
+    args:
+      total_train_steps: *iterations
+
+list:
+  agent:
+    args:
+      target_entropy: [default, default, -4, default, -4]
+      entropy_penalty_coef: [-5.0, -5.0, -10.0, -5.0, -10.0]   # when use_automatic_entropy_tuning is true, this means the initial value
+  sampler:
+    args:
+      env_id:
+        [
+            "Ant-v4",
+            "HalfCheetah-v4",
+            "Hopper-v4",
+#            "Humanoid-v4",
+            "HumanoidStandup-v4",
+            "Walker2d-v4",
+        ]
+#grid:
+#  agent:
+#    args:
+#      target_entropy: [-4]
+#      entropy_penalty_coef: [-10.0]   # when use_automatic_entropy_tuning is true, this means the initial value
+#      num_env_train: [3]
+
+#list:
+#  agent:
+#    args:
+#      wd_policy: [0.0, 1.0e-5]
+#      separate_mean_variance_optimizer: [-100.0]
+#      separate_policy_entropy_training: [true]  # number means update interval
+#      entropy_penalty_coef: [0.002, 0.0002]
+#      total_iterations: [1000, 10000, 100000, 1000000]   # this is to control schedule_lr
+#      discount_factor: [0.98, 0.99, 0.999, 1.0]
+#      use_automatic_entropy_tuning: [true]
+#      target_entropy: [-5, -4, -3, -2]   # option: default, (A) * action_dim
+#      schedule_lr_policy: [true, false]
+#      schedule_lr_critic: [false, true]
+#      training_times: [1, 2, 3, 4, 5]
+#      lr_critic: [1.0e-3]
+#      policy_warmup_step: [8, 50]
+#      lr_policy: [1.0e-3]
+#      random_critic_index_number: [200, 500, 800, 1000]
+#      random_policy_index_number: [50, 100, 150, 200]
+#  policy:
+#    args:
+#      mean_net_args:
+#        layer_norm: [true, false]
+#        avg_neuron: [256, 512, 2048, 1024]
+#        num_hidden: [2, 2, 2, 4]
+#      variance_net_args:
+#        layer_norm: [true, false]
+#        avg_neuron: [128, 128, 256, 256]
+#        num_hidden: [2, 2, 2, 2]
+#  replay_buffer:
+#    args:
+#      buffer_size: [500, 1000, 2000, 5000]
+#  critic:
+#    args:
+#      net_args:
+#        n_embd: [128, 256]
+#        n_head: 8
+#      update_rate: [2.0e-3, 1.0, 2.0e-3]
+
+#  sampler:
+#    args:
+#      cut_segment: [1, 2, 4, 5, 10, 10]
+#      min_length: [1, 4, 1, 1]
+#      step_length: [1, 1, 16, 16, 16, 16]
+#      num_env_train: [2, 4, 6]
+
+#grid:
+#  critic:
+#    args:
+#      net_args:
+#        n_embd: [128, 256]
+#  policy:
+#    args:
+#      mean_net_args:
+#        layer_norm: [true, false]
+#        avg_neuron: [128, 256]
+#      variance_net_args:
+#        layer_norm: true
+#        avg_neuron: 128
+#  agent:
+#    args:
+#      target_update_interval: [10, 500]
+#      use_automatic_entropy_tuning: [false, true]

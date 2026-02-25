@@ -31,7 +31,7 @@ fi
 
 # Install packages using conda or mamba
 echo "Installing packages with conda or mamba"
-conda install -c hussamalafandi cppprojection -c conda-forge -y
+conda install -c hussamalafandi -c conda-forge -y
 
 mamba install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 mamba install conda-forge::wandb=0.16.3 -y
@@ -49,15 +49,9 @@ cd ..
 # Download packages from Github
 
 # Fancy_Gym
-git clone -b bruce_dev --single-branch git@github.com:BruceGeLi/fancy_gymnasium.git
+git clone -b dt_branch --single-branch git@github.com:DongTian95/fancy_gymnasium.git
 cd fancy_gymnasium
 pip install -e .
-conda develop .
-cd ..
-
-# Trust_Region_Projection
-git clone -b bruce_dev --single-branch git@github.com:BruceGeLi/trust-region-layers.git
-cd trust-region-layers
 conda develop .
 cd ..
 

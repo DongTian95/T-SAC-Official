@@ -31,16 +31,11 @@ fi
 
 # Install packages using conda or mamba
 echo "Installing packages with conda or mamba"
-conda install -c hussamalafandi -c conda-forge -y
+conda install -c conda-forge conda-build -y
 
-mamba install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
-mamba install conda-forge::wandb=0.16.3 -y
-mamba install conda-forge::natsort=8.4.0 -y
-mamba install conda-forge::tabulate=0.9.0 -y
-mamba install conda-forge::conda-build=24.1.2 -y
-mamba install conda-forge::matplotlib -y
-mamba install conda-forge::tqdm -y
-mamba install conda-forge::addict -y
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+
+pip install tqdm==4.67.3 wandb natsort==8.4.0 tabulate==0.9.0 "numpy<2" pytest psutil==7.2.2 addict==2.4.0 matplotlib==3.10.8
 
 # Add the current TCE repo to python path
 conda develop .
@@ -51,34 +46,35 @@ cd ..
 # Fancy_Gym
 git clone -b dt_branch --single-branch git@github.com:DongTian95/fancy_gymnasium.git
 cd fancy_gymnasium
-pip install -e .
+pip uninstall fancy_gymnasium -y
 conda develop .
 cd ..
 
 # Git_Repo_Tracker
 git clone -b main --single-branch git@github.com:ALRhub/Git_Repos_Tracker.git
 cd Git_Repos_Tracker
-pip install -e .
+pip uninstall git_repos_tracker -y
 conda develop .
 cd ..
 
 # MetaWorld
 git clone -b bruce_dev --single-branch git@github.com:BruceGeLi/Metaworld.git
 cd Metaworld
-pip install -e .
+pip uninstall metaworld -y
 conda develop .
 cd ..
 
 # cw2
 git clone -b bruce_dev --single-branch git@github.com:BruceGeLi/cw2.git
 cd cw2
-pip install -e .
+pip uninstall cw2 -y
 conda develop .
 cd ..
 
 # MP_PyTorch
 git clone -b bruce_dev --single-branch git@github.com:ALRhub/MP_PyTorch.git
 cd MP_PyTorch
+pip uninstall mp_pytorch -y
 conda develop .
 cd ..
 

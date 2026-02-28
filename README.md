@@ -140,17 +140,32 @@ echo $CONDA_DEFAULT_ENV
 > Replace the commands below with your actual entrypoints (e.g., `python mp_exp_multiprocessing.py .../local.yaml -o --nocodecopy`, 
 > `python mp_exp_multiprocessing.py .../horeka.yaml -o -s`).
 
-### Train (example)
+### Move to execution root of this project
+```commandline
+cd T-SAC-Official/mprl
+```
 
-```bash
-python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 steps=5_000_000
+### Train (local)
+
+```
+python mp_exp_multiprocessing.py config/.../transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+```
+
+### Train (Horeka)
+
+```
+python mp_exp_multiprocessing.py config/.../transformer_sac_multiprocessing/horeka.yaml -o -s
 ```
 
 ### Evaluate (example)
 
-```bash
-python eval.py suite=gymnasium env=Walker2d-v4 ckpt=path/to/checkpoint episodes=20
 ```
+python eval.py
+```
+version number and epoch number will be found at WandB at: 
+
+<img src="./figures_readme/version_number.png" width="450" alt="logo">
+<img src="./figures_readme/epoch_number.png" width="450" alt="logo">
 
 ---
 
@@ -166,27 +181,42 @@ We report results on:
 
 ### Suggested reproduction commands (edit to match your scripts/configs)
 
-#### Meta-World ML1
-
-```bash
-# single task
-python train.py suite=metaworld task=assembly algo=tsac seed=0 steps=5_000_000
-
-# sweep all ML1 tasks (example wrapper)
-python scripts/run_metaworld_ml1.py algo=tsac seeds=0,1,2,3,4,5,6,7 steps=5_000_000
+### Move to execution root of this project
+```commandline
+cd T-SAC-Official/mprl
 ```
 
-#### FANCYGYM Box-Pushing
+#### Meta-World ML1
 
-```bash
-python train.py suite=fancygym task=box_pushing_dense  algo=tsac seed=0 steps=20_000_000
-python train.py suite=fancygym task=box_pushing_sparse algo=tsac seed=0 steps=20_000_000
+```
+# single task
+python mp_exp_multiprocessing.py config/metaworld/transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+
+# sweep all ML1 tasks (Horeka)
+python mp_exp_multiprocessing.py config/metaworld/transformer_sac_multiprocessing/horeka.yaml -o -s
+```
+
+#### FANCYGYM Box-Pushing Dense
+
+```
+python mp_exp_multiprocessing.py config/box_push_random_init/transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+python mp_exp_multiprocessing.py config/box_push_random_init/transformer_sac_multiprocessing/horeka.yaml -o -s
+
+```
+
+#### FANCYGYM Box-Pushing Sparse
+
+```
+python mp_exp_multiprocessing.py config/box_push_random_init_sparse/transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+python mp_exp_multiprocessing.py config/box_push_random_init_sparse/transformer_sac_multiprocessing/horeka.yaml -o -s
+
 ```
 
 #### Gymnasium MuJoCo
 
-```bash
-python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 steps=5_000_000
+```
+python mp_exp_multiprocessing.py config/gym_mujoco/transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+python mp_exp_multiprocessing.py config/gym_mujoco/transformer_sac_multiprocessing/horeka.yaml -o -s
 ```
 ---
 
@@ -194,14 +224,7 @@ python train.py suite=gymnasium env=Walker2d-v4 algo=tsac seed=0 steps=5_000_000
 
 **Install issues (MuJoCo / rendering):**
 
-* verify `gymnasium[mujoco]` works with a minimal rollout
-* on headless servers, you may need EGL / OSMesa
-
-**Results don’t match the paper:**
-
-* confirm evaluation protocol (especially Meta-World final-step success)
-* confirm step budget, number of seeds, and deterministic evaluation settings
-* confirm `min_len/max_len`, UTD, and policy delay / update schedules
+* conda-build is essential
 
 When opening an issue, please include:
 

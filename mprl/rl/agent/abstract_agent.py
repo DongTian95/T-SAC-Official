@@ -170,29 +170,29 @@ class AbstractAgent(ABC):
         self.critic.load_weights(log_dir, epoch)
 
         # Get save path of the optimizers
-        policy_optimizer_path = \
-            util.get_training_state_save_path(log_dir, "policy_optimizer",
-                                              epoch)
-
-        # Reset optimizers using the loaded nets
-        self.policy_optimizer, self.critic_optimizer = \
-            self.get_optimizer(self.policy, self.critic)
-
-        # Load optimizers states
-        self.policy_optimizer.load_state_dict(torch.load(policy_optimizer_path))
-
-        if not isinstance(self.critic_optimizer, tuple):
-            critic_optimizer_path = \
-                util.get_training_state_save_path(log_dir, "critic_optimizer",
-                                                  epoch)
-            self.critic_optimizer.load_state_dict(torch.load(critic_optimizer_path))
-        else:
-            for i, critic_opt in enumerate(self.critic_optimizer):
-                critic_optimizer_path = \
-                    util.get_training_state_save_path(log_dir,
-                                                      f"critic_optimizer_{i+1}",
-                                                      epoch)
-                critic_opt.load_state_dict(torch.load(critic_optimizer_path))
+        # policy_optimizer_path = \
+        #     util.get_training_state_save_path(log_dir, "policy_optimizer",
+        #                                       epoch)
+        #
+        # # Reset optimizers using the loaded nets
+        # self.policy_optimizer, self.critic_optimizer = \
+        #     self.get_optimizer(self.policy, self.critic)
+        #
+        # # Load optimizers states
+        # self.policy_optimizer.load_state_dict(torch.load(policy_optimizer_path))
+        #
+        # if not isinstance(self.critic_optimizer, tuple):
+        #     critic_optimizer_path = \
+        #         util.get_training_state_save_path(log_dir, "critic_optimizer",
+        #                                           epoch)
+        #     self.critic_optimizer.load_state_dict(torch.load(critic_optimizer_path))
+        # else:
+        #     for i, critic_opt in enumerate(self.critic_optimizer):
+        #         critic_optimizer_path = \
+        #             util.get_training_state_save_path(log_dir,
+        #                                               f"critic_optimizer_{i+1}",
+        #                                               epoch)
+        #         critic_opt.load_state_dict(torch.load(critic_optimizer_path))
 
         # Load total number of steps
         self.num_iterations = epoch

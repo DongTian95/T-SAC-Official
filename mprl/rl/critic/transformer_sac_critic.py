@@ -136,3 +136,6 @@ class TransformerSACCritic(AbstractCritic):
 
     def reset_network(self):
         self._create_network()
+
+    def parameters(self) -> list:
+        return [self.net1.parameters() + self.net2.parameters()]

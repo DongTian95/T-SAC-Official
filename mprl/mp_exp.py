@@ -28,11 +28,6 @@ class MPExperiment(experiment.AbstractIterativeExperiment):
         # torch.set_num_threads(cpus_per_rep)
         # torch.set_num_interop_threads(cpus_per_rep)
 
-        # some torch issue
-        # torch.backends.cuda.enable_mem_efficient_sdp(False)
-        # torch.backends.cuda.enable_flash_sdp(False)
-        # torch.backends.cuda.enable_math_sdp(True)
-
         # Set random seed globally
         util.set_global_random_seed(cw_config["seed"])
         self.verbose_level = cw_config.get("verbose_level", 1)
@@ -55,6 +50,10 @@ class MPExperiment(experiment.AbstractIterativeExperiment):
 
         # whether add time stamp
         add_timestamp = cw_config.get("add_timestamp", True)
+
+        if not self.training:   # eval doesn't use multiprocessing module
+            cfg["sampler"]["type"] = "RLACSampler"
+            cfg["agent"]["type"] = "RLAC"
 
         # Components
         self.sampler = sampler_factory(cfg["sampler"]["type"],

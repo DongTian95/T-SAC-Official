@@ -1,7 +1,0 @@
-{"time":"2025-10-03T16:12:19.428814156+02:00","level":"INFO","msg":"stream: starting","core version":"0.21.1"}
-{"time":"2025-10-03T16:12:19.737346581+02:00","level":"INFO","msg":"stream: created new stream","id":"kehoega2"}
-{"time":"2025-10-03T16:12:19.737389814+02:00","level":"INFO","msg":"stream: started","id":"kehoega2"}
-{"time":"2025-10-03T16:12:19.73740022+02:00","level":"INFO","msg":"writer: started","stream_id":"kehoega2"}
-{"time":"2025-10-03T16:12:19.737416145+02:00","level":"INFO","msg":"sender: started","stream_id":"kehoega2"}
-{"time":"2025-10-03T16:12:19.737430742+02:00","level":"INFO","msg":"handler: started","stream_id":"kehoega2"}
-{"time":"2025-10-03T16:12:39.09971243+02:00","level":"WARN","msg":"sender: sendUseArtifact: job builder disabled, skipping"}

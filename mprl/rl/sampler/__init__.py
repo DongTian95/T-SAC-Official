@@ -2,7 +2,6 @@ from typing import Literal
 
 from .abstract_sampler import *
 from .transformer_sac_sampler import *
-from .n_return_sac_sampler import *
 from .rlac_sampler import *
 
 

@@ -2,7 +2,6 @@ import os
 import sys
 
 import torch
-from sympy.physics.quantum.density import entropy
 
 from mprl.util import util
 from .abstract_policy import AbstractGaussianPolicy

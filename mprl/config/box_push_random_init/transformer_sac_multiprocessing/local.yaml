@@ -17,9 +17,9 @@ params:
   sampler:
     args:
       num_env_train: 4
-      num_env_test: 4
+      num_env_test: 7
       episodes_per_train_env: 1
-      episodes_per_test_env: 38
+      episodes_per_test_env: 24
   projection:
     args:
       total_train_steps: *iterations

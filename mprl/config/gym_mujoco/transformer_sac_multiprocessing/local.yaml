@@ -16,4 +16,4 @@ params:
       num_env_train: 4
       num_env_test: 7
       episodes_per_train_env: 1
-      episodes_per_test_env: 20
+      episodes_per_test_env: 24

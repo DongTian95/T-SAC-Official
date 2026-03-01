@@ -141,7 +141,7 @@ echo $CONDA_DEFAULT_ENV
 
 ## Notes
 
-* If you clone dependencies via `git@github.com:...`, you need GitHub SSH keys configured; otherwise use HTTPS clones.
+* If you clone dependencies via `git@github.com:...`, you need GitHub SSH keys configured; otherwise use HTTPS clones(not preferred, additional adjustment may be required).
 
 ---
 

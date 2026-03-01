@@ -46,7 +46,7 @@ T-SAC strengthens SAC by “chunking” **inside the critic**:
 
 ### Hardware Requirements & CPU-Only Alternative
 
-Linux OS is required. We recommend to use Linux 12.4 here.
+Linux OS is required. We recommend to use Ubuntu 20.04 here.
 
 Running this program requires both a CPU and GPU because **multiprocessing** module is used to distribute the workload: the sampling procedure runs on the CPU, while model training occurs on the GPU.
 

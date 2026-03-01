@@ -48,6 +48,7 @@ T-SAC strengthens SAC by “chunking” **inside the critic**:
 
 Linux OS is required. We recommend to use Ubuntu 20.04 here.
 
+
 We recommend installing PyTorch cu118 to match the cluster environment (HoreKa); nvidia-smi may show CUDA 12.x locally and that is OK.
 
 Running this program requires both a CPU and GPU because **multiprocessing** module is used to distribute the workload: the sampling procedure runs on the CPU, while model training occurs on the GPU.

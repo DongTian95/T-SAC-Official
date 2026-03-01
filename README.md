@@ -6,6 +6,11 @@ Official code release for the ICLR 2026 paper:
 
 **Chunking the Critic: A Transformer-Based Soft Actor-Critic with N-Step Returns**  
 Dong Tian*, Onur Celik, Gerhard Neumann (Karlsruhe Institute of Technology, KIT)  
+
+openreview: https://openreview.net/forum?id=rb5eTktqbc
+
+arxiv: https://arxiv.org/abs/2503.03660
+
 \*Corresponding author: dong.tian@outlook.de
 
 ---

@@ -17,7 +17,7 @@ Dong Tian*, Onur Celik, Gerhard Neumann (Karlsruhe Institute of Technology, KIT)
 **Public test dashboard (paper runs):**  
 https://wandb.ai/dt_team/T-SAC%20results?nw=nwusernwzyq
 
-If you are unable to reproduce the paper or Weights & Biases results **after making a best-effort attempt**, please open an issue (preferred) or email—we’re happy to help.
+If you are unable to reproduce the paper or Weights & Biases results **after making a best-effort attempt**, please open an issue (preferred) or email—we’re happy to help. :)
 
 ---
 

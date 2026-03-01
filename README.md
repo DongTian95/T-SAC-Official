@@ -152,13 +152,19 @@ cd T-SAC-Official/mprl
 ```
 python mp_exp_multiprocessing.py config/.../transformer_sac_multiprocessing/local.yaml -o --nocodecopy
 ```
-
+e.g.
+```
+python mp_exp_multiprocessing.py config/box_push_random_init/transformer_sac_multiprocessing/local.yaml -o --nocodecopy
+```
 ### Train (Horeka)
 
 ```
 python mp_exp_multiprocessing.py config/.../transformer_sac_multiprocessing/horeka.yaml -o -s
 ```
-
+e.g.
+```
+python mp_exp_multiprocessing.py config/box_push_random_init/transformer_sac_multiprocessing/horeka.yaml -o -s
+```
 ### Evaluate (example)
 
 ```
